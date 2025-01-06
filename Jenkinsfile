@@ -19,5 +19,17 @@ pipeline {
       }
     }
 
+    stage('Docker-push') {
+      steps {
+        script {
+          withDockerRegistry(credentialsId: 'docker-hub-credentials-id', url: 'https://index.docker.io/v1/') {
+            docker.image('zh3008/pipeline').push("latest")
+            docker.image('zh3008/pipeline').push(env.BUILD_NUMBER)
+          }
+        }
+
+      }
+    }
+
   }
 }
