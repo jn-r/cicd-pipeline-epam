@@ -1,5 +1,5 @@
 pipeline {
-  agent none
+  agent any
   stages {
     stage('Build') {
       steps {
@@ -29,7 +29,6 @@ pipeline {
             def app = docker.image("zh3008/pipeline:${env.BUILD_NUMBER}")
             app.push("${env.BUILD_NUMBER}")
             app.push("latest")}
-
           }
 
         }
