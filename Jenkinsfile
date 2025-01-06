@@ -15,21 +15,25 @@ pipeline {
 
     stage('Docker-build') {
       steps {
-        sh 'docker build -t zh3008/pipeline .'
+        script {
+          docker.build("zh3008/pipeline:${env.BUILD_NUMBER}")
+        }
+
       }
     }
 
     stage('Docker-push') {
       steps {
         script {
-          withDockerRegistry(credentialsId: 'docker-hub-credentials-id', url: 'https://index.docker.io/v1/') {
-            docker.image('zh3008/pipeline').push("latest")
-            docker.image('zh3008/pipeline').push(env.BUILD_NUMBER)
+          docker.withRegistry('https://registry.hub.docker.com', 'docker_hub_creds_id') {
+            def app = docker.image("zh3008/pipeline:${env.BUILD_NUMBER}")
+            app.push("${env.BUILD_NUMBER}")
+            app.push("latest")}
+
           }
+
         }
-
       }
-    }
 
+    }
   }
-}
